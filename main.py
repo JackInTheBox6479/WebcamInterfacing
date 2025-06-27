@@ -11,7 +11,7 @@ xmax = 120
 ymin = 20
 ymax = 120
 
-# Calculate the average BGR values of the pixel
+# Empty set to hold the pixel color values
 color_values = []
 
 while True:
@@ -19,29 +19,22 @@ while True:
     flipped_frame = cv2.flip(frame, 1)
 
     if ret:
+        # Draws read rectangle and displays frame
         cv2.rectangle(flipped_frame, (xmin, ymin), (xmax, ymax), (0, 0, 255), 3)
         cv2.imshow("Webcam", flipped_frame)
 
-
-
-        pixels = {}
+        #Adds the color value for each pixel in the range
         for x in range(xmin, xmax):
             for y in range(ymin, ymax):
                 pixel = flipped_frame[y, x]
                 color_values.append(pixel)
 
-       # if len(color_values) > 60:
-        #    color_values.pop(0)
-
+        #Deteremines the average color values
         blue = sum([int(c[0]) for c in color_values]) // len(color_values)
         green = sum([int(c[1]) for c in color_values]) // len(color_values)
         red = sum([int(c[2]) for c in color_values]) // len(color_values)
 
-        # Creates a new frame showing the current color at the pixel
-        #current_color_frame = np.full((480, 640, 3), pixel, dtype=np.uint8)
-        #cv2.imshow(f"Current Color of Pixel {pixel_x}, {pixel_y}", current_color_frame)
-
-        # Creates a new frame showing the current color at the pixel
+        # Creates a new frame showing the average color in the designated range
         average_color_frame = np.full((480, 640, 3), (blue, green, red), dtype=np.uint8)
         cv2.imshow(f"Average Color", average_color_frame)
         color_values.clear()
@@ -50,8 +43,6 @@ while True:
         key = cv2.waitKey(1)
         if key == ord("q"):
             break
-
-#print(f'Blue: {pixel[0]} Green: {pixel[1]} Red: {pixel[2]}')
 
 webcam.release()
 cv2.destroyAllWindows()
